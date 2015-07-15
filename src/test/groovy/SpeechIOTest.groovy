@@ -7,9 +7,11 @@ import org.testng.annotations.*
 
 import javax.sound.sampled.AudioSystem
 
+import opendial.Settings;
+
 public class SpeechIOTest {
 
-    String recognize(AudioInputStream audio) {
+        String recognize(AudioInputStream audio) {
         Configuration configuration = new Configuration();
         configuration.setAcousticModelPath(Paths.acousticModelFolderPath);
         configuration.setDictionaryPath(Paths.dictionaryPath);
@@ -51,8 +53,7 @@ public class SpeechIOTest {
                 requiredFiles.put(file.getName(), true);
             }
         }
-        println(requiredFiles.containsValue());
-//        assertFalse(requiredFiles.containsValue(false));	// all files must exist. False must not be found in
+        assertFalse(requiredFiles.containsValue(false));	// all files must exist. False must not be found in
         // hash map
     }
 
