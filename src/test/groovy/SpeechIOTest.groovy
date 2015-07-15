@@ -7,15 +7,16 @@ import org.testng.annotations.*
 
 import javax.sound.sampled.AudioSystem
 
-class SpeechIOTest {
+public class SpeechIOTest {
 
     String recognize(AudioInputStream audio) {
         Configuration configuration = new Configuration();
-        configuration.setAcousticModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us");
-        configuration.setDictionaryPath("resource:/grammar_en/ella_en.dict");
-        configuration.setGrammarPath("resource:/grammar_en");
+        configuration.setAcousticModelPath(Paths.acousticModelFolderPath);
+        configuration.setDictionaryPath(Paths.dictionaryPath);
+        configuration.setGrammarPath(Paths.grammarPath);
         configuration.setUseGrammar(true);
-        configuration.setGrammarName("compact_gram");
+        configuration.setGrammarName(Paths.grammarName);
+
         StreamSpeechRecognizer recognizer = new StreamSpeechRecognizer(configuration)
         recognizer.startRecognition(audio);
         return recognizer.getResult().getHypothesis()
@@ -28,10 +29,51 @@ class SpeechIOTest {
         ]
     }
 
-    @Test(dataProvider = 'expandedGrammar')
+    @Test(dataProvider = 'expandedGrammarEnglish')
     void canRecognizeGrammar(AudioInputStream audio, String expected) {
         def actual = recognize(audio)
         assert actual == expected
     }
 
+    @Test
+    void CheckFilesInFolder() {
+        File folder = new File(Paths.acousticModelFolderPath);
+        int mustHaveFilesCount = 10;
+        printf("AM folder")
+        printf(folder.toString())
+//        assertEquals(mustHaveFilesCount, folder.listFiles().length);
+        Map<String, Boolean> requiredFiles = new HashMap<String, Boolean>();
+        // add all the required files
+        requiredFiles.put("file name", false);
+        for (File file : folder.listFiles()) {
+            if (requiredFiles.containsKey(file.getName())) {
+                // if file exists, mark it as true
+                requiredFiles.put(file.getName(), true);
+            }
+        }
+        println(requiredFiles.containsValue());
+//        assertFalse(requiredFiles.containsValue(false));	// all files must exist. False must not be found in
+        // hash map
+    }
+
+    @Test
+    public void ValidateDictionary() {
+        try {
+            FileInputStream fstream = new FileInputStream(Paths.dictionaryPath);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+            String line;
+            try {
+                while ((line = br.readLine()) != null) {
+                    // check the required format, eg. first character lower case, etc.
+                    assertFalse(Character.isUpperCase(line.charAt(0)));	//first character must be lower case
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                fail("Failed to read line. Check StackTrace");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            fail("Dictionary file not found!");
+        }
+    }
 }

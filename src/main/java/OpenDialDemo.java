@@ -9,15 +9,13 @@ public class OpenDialDemo {
         DialogueSystem system = new DialogueSystem();
 
         // Extracting the dialogue domain
-        Domain domain = XMLDomainReader.extractDomain("resources/main/Domain_Opendial_Ella.xml");
+        Domain domain = XMLDomainReader.extractDomain(Paths.xmlDomainPath);
         system.changeDomain(domain);
 
         Settings setting = system.getSettings();
-        setting.params.put("acousticmodel", "resources/main/edu/cmu/sphinx/models/en-us/en-us");
-        setting.params.put("dictionary", "resources/main/grammar_en/ella_en.dict");
-//        setting.params.put("dictionary", "resources/main/grammar_en/test_dict.dic");
-//        setting.params.put("dictionary", "resources/main/edu/cmu/sphinx/models/en-us/cmudict-en-us.dict");
-        setting.params.put("grammar", "resources/main/grammar_en/compact_gram.gram");
+        setting.params.put("acousticmodel", Paths.acousticModelFolderPath);
+        setting.params.put("dictionary", Paths.dictionaryPath);
+        setting.params.put("grammar", Paths.grammarPath);
         system.changeSettings(setting);
 
         // Adding new domain modules (optional)
