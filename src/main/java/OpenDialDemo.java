@@ -15,10 +15,8 @@ public class OpenDialDemo {
         system.changeDomain(domain);
 
         Settings setting = system.getSettings();
-        setting.params.put("acousticmodel", "resource:/edu/cmu/sphinx/models/en-us/en-us");
-        setting.params.put("dictionary", "resource:/grammar_en/ella_en.dict");
-//        setting.params.put("dictionary", "resources/main/grammar_en/test_dict.dic");
-//        setting.params.put("dictionary", "resources/main/edu/cmu/sphinx/models/en-us/cmudict-en-us.dict");
+        setting.params.put("acousticmodel", "resources/main/en-us-adapt");
+        setting.params.put("dictionary", "resources/main/grammar_en/ella_en.dict");
         setting.params.put("grammar", "resource:/grammar_en/compact_gram.gram");
         system.changeSettings(setting);
 
